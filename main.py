@@ -1,8 +1,8 @@
 import numpy as np
 import pyarrow as pa
+import pandas as pd
 
-
-def main():
+def display_pyarrow():
     random_numbers = np.random.randint(1, 100, size=10)
 
     # Create a PyArrow array from the NumPy array
@@ -30,6 +30,35 @@ def main():
 
     print("PyArrow table:")
     print(arrow_table)
+
+
+def display_pandas():
+
+    random_numbers = np.random.randint(1, 100, size=10)
+
+    # Create a Pandas DataFrame from the NumPy array
+    df = pd.DataFrame({"numbers": random_numbers})
+
+    df["strings"] = [
+        "Hello",
+        "World",
+        "from",
+        "Pandas",
+        "and",
+        "NumPy",
+        "Python",
+        "rocks",
+        "!",
+        "123",
+    ]
+
+    print("Pandas DataFrame with strings:")
+    print(df)
+
+
+def main():
+    display_pyarrow()
+    display_pandas()
 
 
 if __name__ == "__main__":
