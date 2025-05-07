@@ -1,0 +1,36 @@
+import numpy as np
+import pyarrow as pa
+
+
+def main():
+    random_numbers = np.random.randint(1, 100, size=10)
+
+    # Create a PyArrow array from the NumPy array
+    arrow_array = pa.array(random_numbers)
+
+    print("NumPy array:", random_numbers)
+    print("PyArrow array:", arrow_array)
+
+    arrow_string = pa.array(
+        [
+            "Hello",
+            "World",
+            "from",
+            "PyArrow",
+            "and",
+            "NumPy",
+            "Python",
+            "rocks",
+            "!",
+            "123",
+        ]
+    )
+
+    arrow_table = pa.table({"numbers": arrow_array, "strings": arrow_string})
+
+    print("PyArrow table:")
+    print(arrow_table)
+
+
+if __name__ == "__main__":
+    main()
