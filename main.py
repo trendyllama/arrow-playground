@@ -1,64 +1,49 @@
 import numpy as np
 import pyarrow as pa
 import pandas as pd
+from functools import wraps
+import time
 
+from src.arrow_playground.iris import display_iris
+
+def perf_timer(func):
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        s = time.perf_counter()
+        result = func(*args, **kwargs)
+        e = time.perf_counter()
+        print(f"Function {func.__name__} took {e - s:.4f} seconds to run.")
+        return result
+    return wrapper
+
+@perf_timer
 def display_pyarrow():
-    random_numbers = np.random.randint(1, 100, size=10)
 
-    # Create a PyArrow array from the NumPy array
-    arrow_array = pa.array(random_numbers)
-
-    print("NumPy array:", random_numbers)
-    print("PyArrow array:", arrow_array)
-
-    arrow_string = pa.array(
-        [
-            "Hello",
-            "World",
-            "from",
-            "PyArrow",
-            "and",
-            "NumPy",
-            "Python",
-            "rocks",
-            "!",
-            "123",
-        ]
-    )
-
-    arrow_table = pa.table({"numbers": arrow_array, "strings": arrow_string})
+    arrow_table = pa.table([np.random.rand(1000, 3)], names=["A", "B", "C"])
 
     print("PyArrow table:")
     print(arrow_table)
 
 
+@perf_timer
 def display_pandas():
 
-    random_numbers = np.random.randint(1, 100, size=10)
-
     # Create a Pandas DataFrame from the NumPy array
-    df = pd.DataFrame({"numbers": random_numbers})
+    df = pd.DataFrame([np.random.randint(0, 100, 1000),
+                       np.random.randint(0, 100, 1000),
+                       np.random.rand(0, 100, 1000)], columns=["A", "B", "C"])
+    print(df.dtypes)
 
-    df["strings"] = [
-        "Hello",
-        "World",
-        "from",
-        "Pandas",
-        "and",
-        "NumPy",
-        "Python",
-        "rocks",
-        "!",
-        "123",
-    ]
-
-    print("Pandas DataFrame with strings:")
     print(df)
 
 
 def main():
-    display_pyarrow()
-    display_pandas()
+    # display_pyarrow()
+    # display_pandas()
+
+    display_iris()
 
 
 if __name__ == "__main__":
