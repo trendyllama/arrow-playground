@@ -5,6 +5,7 @@ from functools import wraps
 import time
 
 from src.arrow_playground.iris import display_iris
+from src.arrow_playground.imdb_reviews import display_imdb_reviews
 
 def perf_timer(func):
 
@@ -44,6 +45,8 @@ def main():
     # display_pandas()
 
     display_iris()
+
+    display_imdb_reviews()
 
 
 if __name__ == "__main__":

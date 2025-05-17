@@ -1,6 +1,6 @@
 import time
 import pandas as pd
-import pyarrow.csv as pacsv
+import io
 import requests
 
 def display_iris():
@@ -11,21 +11,25 @@ def display_iris():
     request = requests.get(url)
 
     if request.status_code == 200:
-        with open("temp/iris.csv", "wb") as f:
-            f.write(request.content)
 
         # Read the CSV file into a DataFrame
 
         s = time.perf_counter()
-        df = pd.read_csv("temp/iris.csv")
+        df = pd.read_csv(io.BytesIO(request.content))
 
         e = time.perf_counter()
         print(f"Function took {e - s:.4f} seconds to run.")
+        return df
 
-        print(df.head())
 
-        s = time.perf_counter()
-        pa_df = pacsv.read_csv("temp/iris.csv")
-        e = time.perf_counter()
-        print(f"Function took {e - s:.4f} seconds to run.")
-        print(pa_df)
+def test_display_iris():
+    # Test the display_iris function
+    df = display_iris()
+
+    assert df is not None
+    # Check if the DataFrame is not empty
+    assert not df.empty, "DataFrame is empty"
+    # Check if the DataFrame has the expected number of columns
+    assert df.shape[1] == 5, "DataFrame does not have 5 columns"
+    # Check if the DataFrame has the expected column names
+    assert list(df.columns) == ["sepal_length", "sepal_width", "petal_length", "petal_width", "species"], "DataFrame does not have the expected column names"
